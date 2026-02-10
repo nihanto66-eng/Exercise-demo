@@ -1,0 +1,93 @@
+.bottom-animation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wave-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.wave-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.wave-path {
+  animation: waveAnimation 8s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.wave-path-delayed {
+  animation: waveAnimation 10s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+@keyframes waveAnimation {
+  0%, 100% {
+    d: path("M0,60 Q300,20 600,60 T1200,60 L1200,120 L0,120 Z");
+  }
+  50% {
+    d: path("M0,60 Q300,100 600,60 T1200,60 L1200,120 L0,120 Z");
+  }
+}
+
+.floating-elements {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+
+.floating-circle {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 138, 107, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 138, 107, 0.3);
+  animation: floatUp 6s ease-in-out infinite;
+  bottom: -20px;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-80px) scale(1.2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-150px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* 반응형 조정 */
+@media (max-width: 480px) {
+  .bottom-animation {
+    height: 120px;
+  }
+  
+  .floating-circle {
+    width: 30px;
+    height: 30px;
+  }
+}
+

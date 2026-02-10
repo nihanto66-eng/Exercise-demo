@@ -1,0 +1,77 @@
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #F0EEE9 0%, #E8E4DD 100%);
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.app-container {
+  max-width: 428px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.app-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2C2C2C;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.time-display {
+  font-size: 48px;
+  font-weight: 600;
+  color: #FF8A6B;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+}
+
+/* Glassmorphism 공통 스타일 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .app {
+    padding: 16px;
+  }
+
+  .app-title {
+    font-size: 28px;
+  }
+
+  .time-display {
+    font-size: 40px;
+  }
+}
+

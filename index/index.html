@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Forme - 운동 앱</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: linear-gradient(135deg, #F0EEE9 0%, #E8E4DD 100%);
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 428px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass-header {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .app-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2C2C2C;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .time-display {
+      font-size: 48px;
+      font-weight: 600;
+      color: #FF8A6B;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 2px;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2C2C2C;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 16px 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .stat-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FF8A6B;
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-unit {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      margin-left: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .intensity-chart {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .chart-container {
+      margin: 16px 0;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      position: relative;
+      height: 200px;
+    }
+
+    #intensityCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .intensity-info {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .intensity-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .intensity-label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .intensity-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FF8A6B;
+    }
+
+    .audio-controller {
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .audio-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .track-info {
+      text-align: center;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .track-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2C2C2C;
+      margin-bottom: 4px;
+    }
+
+    .track-artist {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .audio-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .control-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(1.1);
+    }
+
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+
+    .play-pause-btn {
+      width: 72px;
+      height: 72px;
+      font-size: 32px;
+      background: rgba(255, 138, 107, 0.3);
+      border: 2px solid rgba(255, 138, 107, 0.5);
+    }
+
+    .play-pause-btn:hover {
+      background: rgba(255, 138, 107, 0.4);
+    }
+
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+    }
+
+    .volume-icon {
+      font-size: 20px;
+    }
+
+    .volume-slider {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.3);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #FF8A6B;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(255, 138, 107, 0.4);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #FF8A6B;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(255, 138, 107, 0.4);
+    }
+
+    .volume-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FF8A6B;
+      min-width: 45px;
+      text-align: right;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    .control-button {
+      flex: 1;
+      padding: 20px;
+      border-radius: 20px;
+      border: none;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .control-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .control-button:active {
+      transform: translateY(0);
+    }
+
+    .pause-button {
+      background: rgba(255, 138, 107, 0.2);
+      border: 1px solid rgba(255, 138, 107, 0.4);
+    }
+
+    .pause-button:hover {
+      background: rgba(255, 138, 107, 0.3);
+    }
+
+    .stop-button {
+      background: rgba(255, 100, 100, 0.2);
+      border: 1px solid rgba(255, 100, 100, 0.4);
+    }
+
+    .stop-button:hover {
+      background: rgba(255, 100, 100, 0.3);
+    }
+
+    .button-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .button-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2C2C2C;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 16px;
+      }
+
+      .app-title {
+        font-size: 28px;
+      }
+
+      .time-display {
+        font-size: 40px;
+      }
+    }
+  </style>
+  </head>
+  <body>
+  <div class="app-container">
+    <div class="glass-header">
+      <h1 class="app-title">Forme</h1>
+      <div class="time-display" id="timeDisplay">00:00</div>
+    </div>
+
+    <div class="performance-stats glass-card">
+      <h2 class="section-title">실시간 퍼포먼스</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value">
+            <span id="calories">0</span><span class="stat-unit">kcal</span>
+          </div>
+          <div class="stat-label">칼로리</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">❤️</div>
+          <div class="stat-value">
+            <span id="heartRate">0</span><span class="stat-unit">bpm</span>
+          </div>
+          <div class="stat-label">심박수</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">📍</div>
+          <div class="stat-value">
+            <span id="distance">0.00</span><span class="stat-unit">km</span>
+          </div>
+          <div class="stat-label">거리</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intensity-chart glass-card">
+      <h2 class="section-title">구간별 강도</h2>
+      <div class="chart-container">
+        <canvas id="intensityCanvas"></canvas>
+      </div>
+      <div class="intensity-info">
+        <div class="intensity-item">
+          <span class="intensity-label">평균 강도</span>
+          <span class="intensity-value" id="avgIntensity">0%</span>
+        </div>
+        <div class="intensity-item">
+          <span class="intensity-label">최고 강도</span>
+          <span class="intensity-value" id="maxIntensity">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="audio-controller glass-card">
+      <h2 class="section-title">음악 컨트롤</h2>
+      <div class="audio-content">
+        <div class="track-info">
+          <div class="track-name" id="trackName">에너지 부스트</div>
+          <div class="track-artist" id="trackArtist">Workout Mix</div>
+        </div>
+        
+        <div class="audio-controls">
+          <button class="control-btn prev-btn" id="prevBtn" aria-label="이전 곡">⏮</button>
+          <button class="control-btn play-pause-btn" id="playPauseBtn" aria-label="일시정지">⏸</button>
+          <button class="control-btn next-btn" id="nextBtn" aria-label="다음 곡">⏭</button>
+        </div>
+
+        <div class="volume-control">
+          <span class="volume-icon">🔊</span>
+          <input type="range" min="0" max="100" value="70" id="volumeSlider" class="volume-slider" />
+          <span class="volume-value" id="volumeValue">70%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-buttons">
+      <button class="control-button pause-button" id="pauseBtn">
+        <span class="button-icon" id="pauseIcon">⏸</span>
+        <span class="button-text" id="pauseText">일시정지</span>
+      </button>
+      <button class="control-button stop-button" id="stopBtn">
+        <span class="button-icon">⏹</span>
+        <span class="button-text">긴급 중단</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 상태 관리
+    let isRunning = true;
+    let isPaused = false;
+    let time = 0;
+    let calories = 0;
+    let heartRate = 0;
+    let distance = 0;
+    let intensityData = [];
+    let isPlaying = true;
+    let currentTrack = 1;
+    let volume = 70;
+
+    const tracks = [
+      { id: 1, name: '에너지 부스트', artist: 'Workout Mix' },
+      { id: 2, name: '파워 업', artist: 'Training Beats' },
+      { id: 3, name: '엔듀런스', artist: 'Cardio Mix' }
+    ];
+
+    // DOM 요소
+    const timeDisplay = document.getElementById('timeDisplay');
+    const caloriesEl = document.getElementById('calories');
+    const heartRateEl = document.getElementById('heartRate');
+    const distanceEl = document.getElementById('distance');
+    const intensityCanvas = document.getElementById('intensityCanvas');
+    const avgIntensityEl = document.getElementById('avgIntensity');
+    const maxIntensityEl = document.getElementById('maxIntensity');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeValue = document.getElementById('volumeValue');
+    const trackName = document.getElementById('trackName');
+    const trackArtist = document.getElementById('trackArtist');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const pauseText = document.getElementById('pauseText');
+    const stopBtn = document.getElementById('stopBtn');
+
+    // Canvas 설정
+    const ctx = intensityCanvas.getContext('2d');
+    const canvasWidth = intensityCanvas.offsetWidth;
+    const canvasHeight = intensityCanvas.offsetHeight;
+    intensityCanvas.width = canvasWidth;
+    intensityCanvas.height = canvasHeight;
+
+    // 초기 강도 데이터 생성
+    for (let i = 0; i < 20; i++) {
+      intensityData.push({
+        time: i * 5,
+        intensity: Math.random() * 40 + 60
+      });
+    }
+
+    // 시간 포맷팅
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // 그래프 그리기
+    function drawChart() {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      
+      if (intensityData.length === 0) return;
+
+      const padding = 20;
+      const chartWidth = canvasWidth - padding * 2;
+      const chartHeight = canvasHeight - padding * 2;
+      const maxIntensity = 100;
+      const minIntensity = 0;
+
+      // 그라디언트 영역 그리기
+      ctx.beginPath();
+      ctx.moveTo(padding, canvasHeight - padding);
+      
+      intensityData.forEach((point, index) => {
+        const x = padding + (index / (intensityData.length - 1)) * chartWidth;
+        const y = canvasHeight - padding - ((point.intensity - minIntensity) / (maxIntensity - minIntensity)) * chartHeight;
+        ctx.lineTo(x, y);
+      });
+      
+      ctx.lineTo(padding + chartWidth, canvasHeight - padding);
+      ctx.closePath();
+
+      // 그라디언트
+      const gradient = ctx.createLinearGradient(0, padding, 0, canvasHeight - padding);
+      gradient.addColorStop(0, 'rgba(255, 138, 107, 0.3)');
+      gradient.addColorStop(1, 'rgba(255, 138, 107, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // 라인 그리기
+      ctx.beginPath();
+      ctx.strokeStyle = '#FF8A6B';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      intensityData.forEach((point, index) => {
+        const x = padding + (index / (intensityData.length - 1)) * chartWidth;
+        const y = canvasHeight - padding - ((point.intensity - minIntensity) / (maxIntensity - minIntensity)) * chartHeight;
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+
+      ctx.stroke();
+
+      // 축 그리기
+      ctx.strokeStyle = '#999';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, canvasHeight - padding);
+      ctx.lineTo(canvasWidth - padding, canvasHeight - padding);
+      ctx.stroke();
+
+      // 축 레이블
+      ctx.fillStyle = '#666';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('100', padding - 5, padding + 5);
+      ctx.fillText('0', padding - 5, canvasHeight - padding + 5);
+    }
+
+    // 강도 통계 업데이트
+    function updateIntensityStats() {
+      if (intensityData.length === 0) return;
+      const avg = intensityData.reduce((sum, d) => sum + d.intensity, 0) / intensityData.length;
+      const max = Math.max(...intensityData.map(d => d.intensity));
+      avgIntensityEl.textContent = Math.round(avg) + '%';
+      maxIntensityEl.textContent = Math.round(max) + '%';
+    }
+
+    // 메인 타이머
+    function updateStats() {
+      if (isRunning && !isPaused) {
+        time++;
+        calories += Math.random() * 0.5;
+        heartRate = Math.round(120 + Math.sin(Date.now() / 2000) * 10);
+        distance += Math.random() * 0.01;
+
+        timeDisplay.textContent = formatTime(time);
+        caloriesEl.textContent = Math.round(calories);
+        heartRateEl.textContent = heartRate;
+        distanceEl.textContent = distance.toFixed(2);
+      }
+    }
+
+    // 강도 데이터 업데이트
+    function updateIntensityData() {
+      if (intensityData.length >= 20) {
+        intensityData.shift();
+      }
+      intensityData.push({
+        time: intensityData.length * 5,
+        intensity: Math.random() * 40 + 60
+      });
+      drawChart();
+      updateIntensityStats();
+    }
+
+    // 이벤트 리스너
+    playPauseBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+      playPauseBtn.setAttribute('aria-label', isPlaying ? '일시정지' : '재생');
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentTrack = currentTrack <= 1 ? tracks.length : currentTrack - 1;
+      const track = tracks.find(t => t.id === currentTrack);
+      trackName.textContent = track.name;
+      trackArtist.textContent = track.artist;
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentTrack = currentTrack >= tracks.length ? 1 : currentTrack + 1;
+      const track = tracks.find(t => t.id === currentTrack);
+      trackName.textContent = track.name;
+      trackArtist.textContent = track.artist;
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+      volume = e.target.value;
+      volumeValue.textContent = volume + '%';
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      isPaused = !isPaused;
+      pauseIcon.textContent = isPaused ? '▶' : '⏸';
+      pauseText.textContent = isPaused ? '재개' : '일시정지';
+    });
+
+    stopBtn.addEventListener('click', () => {
+      isRunning = false;
+      isPaused = false;
+      pauseIcon.textContent = '▶';
+      pauseText.textContent = '재개';
+    });
+
+    // 초기화
+    drawChart();
+    updateIntensityStats();
+
+    // 인터벌 설정
+    setInterval(updateStats, 1000);
+    setInterval(updateIntensityData, 2000);
+
+    // 리사이즈 핸들러
+    window.addEventListener('resize', () => {
+      const newWidth = intensityCanvas.offsetWidth;
+      const newHeight = intensityCanvas.offsetHeight;
+      intensityCanvas.width = newWidth;
+      intensityCanvas.height = newHeight;
+      drawChart();
+    });
+  </script>
+  </body>
+</html>
